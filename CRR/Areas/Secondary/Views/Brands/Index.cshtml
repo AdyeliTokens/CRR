@@ -1,0 +1,64 @@
+﻿@model IEnumerable<CRR.Models.Entidades.Brand>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CodeFA)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CigaretteCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CigaretteWeight)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TobaccoWeight)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Active)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CodeFA)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CigaretteCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CigaretteWeight)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TobaccoWeight)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.CodeFA }) |
+            @Html.ActionLink("Details", "Details", new { id=item.CodeFA }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.CodeFA })
+        </td>
+    </tr>
+}
+
+</table>

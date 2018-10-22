@@ -1,0 +1,67 @@
+﻿@model CRR.Models.Entidades.Brand
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Brand</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CodeFA)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CodeFA)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CigaretteCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CigaretteCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WeightCigarette)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WeightCigarette)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WeightTobacco)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WeightTobacco)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

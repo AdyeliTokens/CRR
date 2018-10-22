@@ -1,0 +1,165 @@
+﻿@model IEnumerable<CRR.Models.Entidades.Specs.Label>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Styles.Render("~/Style/DataTables")
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                <div class="box-tools">
+                    <a href="@Url.Action("Create", "RegistroUnidad")" class="btn btn-primary btn-sm">
+                        <span class="fa fa-plus" aria-hidden="true"></span>
+                    </a>
+                </div>
+            </div>
+            <div class="box-body table-responsive">
+                <table class="table table-hover table-striped" id="example1">
+                    <thead>
+                        <tr class="info">
+                            <th></th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Waste.IdWorkCenter)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Lot)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Consecutive)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ManufacturingCenter)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProductionDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ExpirationDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProductCode)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProductDescription)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.LabelNumber)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FlashPoint)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Weight)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Quantity)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ExtractionBank)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ExtractionModule)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Operator)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("Print", null, new { id = item.Id})" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print</a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Waste.IdWorkCenter)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Lot)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Consecutive)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ManufacturingCenter)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProductionDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ExpirationDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProductCode)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProductDescription)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.LabelNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FlashPoint)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Weight)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ExtractionBank)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ExtractionModule)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Operator)
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+                                            <i class="fa fa-gear"></i>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="menu1">
+                                            <li role="presentation">@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "li-action", @data_target = "li-action" })</li>
+                                            <li role="presentation">@Html.ActionLink("Detalles", "Details", new { id = item.Id })</li>
+                                            <li class="divider" role="presentation"></li>
+                                            <li role="presentation">@Html.ActionLink("Eliminar", "Delete", new { id = item.Id })</li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/JS/jquery")
+@Scripts.Render("~/JS/DataTables")
+<script>
+    $(function () {
+        $('#example1').DataTable();
+
+
+        $(".li-action").on("click", function (e) {
+            e.preventDefault();
+            alert("li-action");
+        });
+    });
+</script>

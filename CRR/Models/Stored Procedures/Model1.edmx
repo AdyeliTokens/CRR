@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="FastShiftData.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <Function Name="CRR_CigaretteSpecifications" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="iOrderNo" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="CRR_Department" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="CRR_FastShiftData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="iFromDate" Type="datetime" Mode="In" />
+          <Parameter Name="iToDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="CRR_ProductDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CodeFA" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="CRR_QTMData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="dtBegin" Type="datetime" Mode="In" />
+          <Parameter Name="dtLast" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="CRR_RunningTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="iFromDate" Type="datetime" Mode="In" />
+          <Parameter Name="iToDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="CRR_VisualData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="dtBegin" Type="datetime" Mode="In" />
+          <Parameter Name="dtLast" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="CRR_WorkCenter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="FastShiftDataStoreContainer" />
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FastShiftData" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="CRRStoredProcedures" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="CRR_FastShiftData" ReturnType="Collection(FastShiftData.CRR_FastShiftData_Result)">
+            <Parameter Name="iFromDate" Mode="In" Type="DateTime" />
+            <Parameter Name="iToDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="CRR_ProductDetails" ReturnType="Collection(FastShiftData.CRR_ProductDetails_Result)">
+          <Parameter Name="CodeFA" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="CRR_WorkCenter" ReturnType="Collection(FastShiftData.CRR_WorkCenter_Result)" />
+          <FunctionImport Name="CRR_Department" ReturnType="Collection(FastShiftData.CRR_Department_Result)" />
+          <FunctionImport Name="CRR_QTMData" ReturnType="Collection(FastShiftData.CRR_QTMData_Result)">
+            <Parameter Name="dtBegin" Mode="In" Type="DateTime" />
+            <Parameter Name="dtLast" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="CRR_VisualData" ReturnType="Collection(FastShiftData.CRR_VisualData_Result)">
+            <Parameter Name="dtBegin" Mode="In" Type="DateTime" />
+            <Parameter Name="dtLast" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="CRR_RunningTime" ReturnType="Collection(FastShiftData.CRR_RunningTime_Result)">
+            <Parameter Name="iFromDate" Mode="In" Type="DateTime" />
+            <Parameter Name="iToDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="CRR_CigaretteSpecifications" ReturnType="Collection(FastShiftData.CRR_CigaretteSpecifications_Result)">
+            <Parameter Name="iOrderNo" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="CRR_FastShiftData_Result">
+          <Property Type="String" Name="WorkCenter" Nullable="true" MaxLength="40" />
+          <Property Type="String" Name="Department" Nullable="true" MaxLength="40" />
+          <Property Type="Decimal" Name="ProdVol" Nullable="true" Precision="38" Scale="10" />
+          <Property Type="Decimal" Name="TargetQty" Nullable="true" Precision="38" Scale="10" />
+          <Property Type="Decimal" Name="Now_TargetQty" Nullable="true" Precision="38" Scale="6" />
+          <Property Type="String" Name="OrderNo" Nullable="true" MaxLength="20" />
+          <Property Type="Int16" Name="OrderStatus" Nullable="true" />
+          <Property Type="String" Name="Cigarette" Nullable="true" MaxLength="61" />
+          <Property Type="String" Name="CigaretteName" Nullable="true" />
+          <Property Type="String" Name="FA" Nullable="true" MaxLength="61" />
+          <Property Type="String" Name="FAName" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="CRR_ProductDetails_Result">
+          <Property Type="Int32" Name="FG_ProductID" Nullable="true" />
+          <Property Type="String" Name="FG_ProductNo" Nullable="false" MaxLength="61" />
+          <Property Type="Decimal" Name="CigareteWeight" Nullable="true" Precision="33" Scale="15" />
+        </ComplexType>
+        <ComplexType Name="CRR_WorkCenter_Result">
+          <Property Type="String" Name="WorkCenter" Nullable="false" MaxLength="40" />
+          <Property Type="Int32" Name="TextID" Nullable="true" />
+          <Property Type="String" Name="Facility" Nullable="true" MaxLength="5" />
+          <Property Type="String" Name="Company" Nullable="true" MaxLength="4" />
+          <Property Type="String" Name="Department" Nullable="true" MaxLength="40" />
+        </ComplexType>
+        <ComplexType Name="CRR_Department_Result">
+          <Property Type="String" Name="Department" Nullable="false" MaxLength="40" />
+          <Property Type="String" Name="Facility" Nullable="true" MaxLength="5" />
+          <Property Type="String" Name="Company" Nullable="true" MaxLength="4" />
+          <Property Type="Int32" Name="TextID" Nullable="true" />
+          <Property Type="Int32" Name="CalendarID" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="CRR_QTMData_Result">
+          <Property Type="String" Name="Machine" Nullable="true" MaxLength="2" />
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="Int32" Name="WeekNo" Nullable="true" />
+          <Property Type="String" Name="DateBegin" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="DateEnd" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="Shift" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="CRR_VisualData_Result">
+          <Property Type="String" Name="WorkCenter" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="Int32" Name="WeekNo" Nullable="true" />
+          <Property Type="String" Name="DateBegin" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="DateEnd" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="Shift" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="CRR_RunningTime_Result">
+          <Property Type="String" Name="WorkCenter" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="Type" Nullable="true" MaxLength="6" />
+          <Property Type="Int32" Name="RunningTime" Nullable="true" />
+          <Property Type="Int32" Name="ShiftNo" Nullable="true" />
+          <Property Type="String" Name="Shift" Nullable="true" MaxLength="1" />
+          <Property Type="Int32" Name="WeekNo" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="CRR_CigaretteSpecifications_Result">
+          <Property Type="String" Name="BrandCode" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="BrandName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CigaretteCode" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CigaretteName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Alternative" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="ProductVersion" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="Market" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="Destination" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="ChangeNumber" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="LogoCode" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="RegionalRevision" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="LocalRevision" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="Linkup" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="RippingGroup" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="EffectivityFromDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="CutFiller" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="TippingFiller" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="DCD" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="LaserPerforation" Nullable="true" MaxLength="3" />
+          <Property Type="String" Name="MaterialDescription" Nullable="true" MaxLength="50" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FastShiftDataStoreContainer" CdmEntityContainer="CRRStoredProcedures" >
+          <FunctionImportMapping FunctionImportName="CRR_FastShiftData" FunctionName="FastShiftData.Store.CRR_FastShiftData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FastShiftData.CRR_FastShiftData_Result">
+                <ScalarProperty Name="WorkCenter" ColumnName="WorkCenter" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="ProdVol" ColumnName="ProdVol" />
+                <ScalarProperty Name="TargetQty" ColumnName="TargetQty" />
+                <ScalarProperty Name="Now_TargetQty" ColumnName="Now_TargetQty" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="Cigarette" ColumnName="Cigarette" />
+                <ScalarProperty Name="CigaretteName" ColumnName="CigaretteName" />
+                <ScalarProperty Name="FA" ColumnName="FA" />
+                <ScalarProperty Name="FAName" ColumnName="FAName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CRR_ProductDetails" FunctionName="FastShiftData.Store.CRR_ProductDetails" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FastShiftData.CRR_ProductDetails_Result">
+                <ScalarProperty Name="FG_ProductID" ColumnName="FG_ProductID" />
+                <ScalarProperty Name="FG_ProductNo" ColumnName="FG_ProductNo" />
+                <ScalarProperty Name="CigareteWeight" ColumnName="CigareteWeight" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CRR_WorkCenter" FunctionName="FastShiftData.Store.CRR_WorkCenter">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FastShiftData.CRR_WorkCenter_Result">
+                <ScalarProperty Name="WorkCenter" ColumnName="WorkCenter" />
+                <ScalarProperty Name="TextID" ColumnName="TextID" />
+                <ScalarProperty Name="Facility" ColumnName="Facility" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CRR_Department" FunctionName="FastShiftData.Store.CRR_Department">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FastShiftData.CRR_Department_Result">
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="Facility" ColumnName="Facility" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
+                <ScalarProperty Name="TextID" ColumnName="TextID" />
+                <ScalarProperty Name="CalendarID" ColumnName="CalendarID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CRR_QTMData" FunctionName="FastShiftData.Store.CRR_QTMData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FastShiftData.CRR_QTMData_Result">
+                <ScalarProperty Name="Machine" ColumnName="Machine" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="WeekNo" ColumnName="WeekNo" />
+                <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
+                <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
+                <ScalarProperty Name="Shift" ColumnName="Shift" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CRR_VisualData" FunctionName="FastShiftData.Store.CRR_VisualData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FastShiftData.CRR_VisualData_Result">
+                <ScalarProperty Name="WorkCenter" ColumnName="WorkCenter" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="WeekNo" ColumnName="WeekNo" />
+                <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
+                <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
+                <ScalarProperty Name="Shift" ColumnName="Shift" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CRR_RunningTime" FunctionName="FastShiftData.Store.CRR_RunningTime">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FastShiftData.CRR_RunningTime_Result">
+                <ScalarProperty Name="WorkCenter" ColumnName="WorkCenter" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="RunningTime" ColumnName="RunningTime" />
+                <ScalarProperty Name="ShiftNo" ColumnName="ShiftNo" />
+                <ScalarProperty Name="Shift" ColumnName="Shift" />
+                <ScalarProperty Name="WeekNo" ColumnName="WeekNo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CRR_CigaretteSpecifications" FunctionName="FastShiftData.Store.CRR_CigaretteSpecifications" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FastShiftData.CRR_CigaretteSpecifications_Result">
+                <ScalarProperty Name="BrandCode" ColumnName="BrandCode" />
+                <ScalarProperty Name="BrandName" ColumnName="BrandName" />
+                <ScalarProperty Name="CigaretteCode" ColumnName="CigaretteCode" />
+                <ScalarProperty Name="CigaretteName" ColumnName="CigaretteName" />
+                <ScalarProperty Name="Alternative" ColumnName="Alternative" />
+                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="Destination" ColumnName="Destination" />
+                <ScalarProperty Name="ChangeNumber" ColumnName="ChangeNumber" />
+                <ScalarProperty Name="LogoCode" ColumnName="LogoCode" />
+                <ScalarProperty Name="RegionalRevision" ColumnName="RegionalRevision" />
+                <ScalarProperty Name="LocalRevision" ColumnName="LocalRevision" />
+                <ScalarProperty Name="Linkup" ColumnName="Linkup" />
+                <ScalarProperty Name="RippingGroup" ColumnName="RippingGroup" />
+                <ScalarProperty Name="EffectivityFromDate" ColumnName="EffectivityFromDate" />
+                <ScalarProperty Name="CutFiller" ColumnName="CutFiller" />
+                <ScalarProperty Name="TippingFiller" ColumnName="TippingFiller" />
+                <ScalarProperty Name="DCD" ColumnName="DCD" />
+                <ScalarProperty Name="LaserPerforation" ColumnName="LaserPerforation" />
+                <ScalarProperty Name="MaterialDescription" ColumnName="MaterialDescription" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,81 @@
+﻿@model CRR.Models.Entidades.FastShiftData
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>FastShiftData</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IdWorkcenter)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdWorkcenter)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdBrand)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdBrand)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FAName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FAName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdDepartment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdDepartment)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.ProdVol)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProdVol)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TargetQty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TargetQty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CurrentTargetQty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CurrentTargetQty)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

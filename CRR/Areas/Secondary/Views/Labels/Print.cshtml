@@ -1,0 +1,102 @@
+﻿@model CRR.Models.Entidades.Specs.Label
+
+@{
+    ViewBag.Title = "Print";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<style>
+    .title {
+        text-align: left;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .body {
+        text-align: center;
+        font-weight: bold;
+        font-size: 25px;
+    }
+
+</style>
+
+<style type="text/css" media="print">
+    @@page {
+        size: landscape;
+    }
+    body {
+        writing-mode: tb-rl;
+    }
+</style>
+
+<body onload="window.print();">
+    <div class="row">
+        <div class="col-xs-12 table-responsive">
+            <!-- Header-->
+            <table class="table-bordered">
+                <tr>
+                    <td colspan="2" class="title">NUMERO DE LOTE</td>
+                    <td colspan="2" class="title">NUMERO CONSECUTIVO</td>
+                    <td colspan="2" class="title">CENTRO DE MANUFACTURA</td>
+                </tr>
+                <tr>
+                    <td class="body" colspan="2">@Html.DisplayFor(model => model.Lot)</td>
+                    <td class="body" colspan="2">@Html.DisplayFor(model => model.Consecutive)</td>
+                    <td rowspan="3" colspan="2" class="body">@Html.DisplayFor(model => model.ManufacturingCenter)</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="title">FECHA DE PRODUCION</td>
+                    <td colspan="2" class="title">FECHA DE EXPIRACION</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="body">@Html.DisplayFor(model => model.ProductionDate)</td>
+                    <td colspan="2" class="body">@Html.DisplayFor(model => model.ExpirationDate)</td>
+                </tr>
+            
+                <tr>
+                    <td colspan="2" class="title">CODIGO DEL PRODUCTO</td>
+                    <td colspan="4" class="body">@Html.DisplayFor(model => model.BrandDescription)</td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="body" style="font-size: 75px">@Html.DisplayFor(model => model.ProductCode)</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="title">DESCRIPCION DEL PRODUCTO</td>
+                    @{var description = Model.ProductDescription.Split(' ');}
+                    <td colspan="3" class="body">
+                        <span class="pull-left">@description[0]</span>
+                        <span style="font-size:35px;">@description[1]</span>
+                        <span class="pull-right">@description[2]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="body" colspan="6">@Html.DisplayFor(model => model.LabelNumber)</td>
+                </tr>
+                <tr>
+                    <td class="title">FLASH POINT</td>
+                    <td class="title">PESO TOTAL (KG)</td>
+                    <td class="title">CANTIDAD RS (KG)</td>
+                    <td class="title">BANCO DE EXTRACCION</td>
+                    <td class="title">MODULO DE EXTRACCION</td>
+                    <td class="title">NOMBRE DEL OPERADOR</td>
+                </tr>
+                <tr>
+                    <td class="body">@Html.DisplayFor(model => model.FlashPoint)</td>
+                    <td class="body">@Html.DisplayFor(model => model.Weight) Kg</td>
+                    <td class="body" style="font-size: 35px">@Html.DisplayFor(model => model.Quantity) Kg</td>
+                    <td class="body">@Html.DisplayFor(model => model.ExtractionBank)</td>
+                    <td class="body">@Html.DisplayFor(model => model.ExtractionModule)</td>
+                    <td class="body">@Html.DisplayFor(model => model.Operator)</td>
+                </tr>
+            </table>
+            <!-- ./Footer-->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</body>
+
+

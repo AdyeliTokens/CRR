@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewBag.Title = "StackedBarChart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>StackedBarChart</h2>
+
+<div>
+    <canvas id="chart"></canvas>
+</div>
+
+@Scripts.Render("~/JS/Chart.2.3.0")
+
+@section Scripts {
+
+    @Scripts.Render("~/JS/jquery")
+    <script>
+        $(function () {
+            'use strict';
+
+            //var ctx = document.getElementById('chart');
+
+            //var myChart = new Chart(ctx, {
+            //    type: 'bar',
+            //    data: {
+            //        labels: ['Risk Level'],
+            //        datasets: [
+            //            {
+            //                label: 'Low',
+            //                data: [67.8],
+            //                backgroundColor: '#D6E9C6',
+            //            },
+            //            {
+            //                label: 'Moderate',
+            //                data: [20.7],
+            //                backgroundColor: '#FAEBCC',
+            //            },
+            //            {
+            //                label: 'High',
+            //                data: [11.4],
+            //                backgroundColor: '#EBCCD1',
+            //            }
+            //        ]
+            //    },
+            //    options: {
+            //        scales: {
+            //            xAxes: [{ stacked: true }],
+            //            yAxes: [{ stacked: true }]
+            //        }
+            //    }
+            //});
+
+            var config = {
+                type: 'bar',
+                data: {
+                    labels: ["January", "February", "March", "April", "May", "June", "July"],
+                    datasets: [{
+                        type: 'line',
+                        label: 'Dataset 2',
+                        data: [-65, -10, -80, -81, -56, -85, 40],
+                        borderColor: 'black',
+                        fill: false
+                    }, {
+                        type: 'bar',
+                        label: 'Dataset 1',
+                        backgroundColor: "red",
+                        data: [65, 0, 80, 81, 56, 85, 40],
+                    }, {
+                        type: 'bar',
+                        label: 'Dataset 3',
+                        backgroundColor: "blue",
+                        data: [-65, 0, -80, -81, -56, -85, -40]
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            stacked: true
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    }
+                }
+            };
+
+            var ctx = document.getElementById("chart").getContext("2d");
+            new Chart(ctx, config);
+
+        });
+
+
+    </script>
+
+}

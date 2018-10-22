@@ -1,0 +1,173 @@
+﻿@model CRR.Models.Vistas.Helpers.Parameters
+
+@{
+    ViewBag.Title = "Index";
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    @Styles.Render("~/Style/Bootstrap")
+}
+
+<div id="parameters">
+    @Html.Hidden("weekNo")
+    @Html.Hidden("parameter1")
+    @Html.Hidden("parameter2")
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Self-Control Report</h3>
+
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-wrench"></i>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Download</a></li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="text-center">
+                            @*<strong>Parametros Fisicos @DateTime.Now.ToString("dd-MMM-yyyy")</strong>*@
+                            <strong>Parametros Fisicos </strong>
+                        </p>
+                        <div class="chart">
+                            <canvas id="makerChart" style="height: 180px;"></canvas>
+                        </div>
+                        <!-- /.chart-responsive -->
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-center">
+                            <strong>Parametros Visuales </strong>
+                        </p>
+                        <div class="chart">
+                            <canvas id="packerChart" style="height: 180px;"></canvas>
+                        </div>
+                        <!-- /.chart-responsive -->
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- ./box-body -->
+
+            <div id="box-footer-maker" class="col-sm-12 col-md-6">
+                <p class="text-center">
+                    <strong>Muestreo Físico</strong>
+                </p>
+            </div>
+            <div id="box-footer-packer" class="col-sm-12 col-md-6">
+                <p class="text-center">
+                    <strong>Muestreo Visual</strong>
+                </p>
+            </div>
+
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->
+
+
+@Scripts.Render("~/JS/jquery")
+@Scripts.Render("~/JS/ChartJS")
+@Scripts.Render("~/JS/Sparkline")
+@Scripts.Render("~/JS/Bootstrap")
+@Scripts.Render("~/JS/DataPicker")
+
+<script>
+    $(function () {
+        'use strict';
+        init();
+    });
+
+    function init() {
+        $("#box-footer-maker").html();
+        $("#box-footer-packer").html();
+
+        getChart("/Secondary/SelfControlSpecs/PhysicalParameters", 'makerChart', 'box-footer-maker', '#76D7C4');
+        getChart("/Secondary/SelfControlSpecs/VisualParameters", 'packerChart', 'box-footer-packer','#F39C12');
+    }
+
+    function getChart(url, div, footer,color) {
+        $.ajax({
+            dataType: "json",
+            contentType: "application/json",
+            url: url,
+            data: { weekNo: $("#weekNo").val() },
+            success: function (data) {
+                var barChartCanvas = $('#' + div).get(0).getContext('2d')
+                var barChart = new Chart(barChartCanvas)
+                var barChartData = {
+                    labels: data.lists.map(function (item2) {
+                        return item2.ItemName;
+                    }),
+                    datasets: [
+                        {
+                            label: 'Muestreo Físico',
+                            fillColor: color,
+                            strokeColor: color,
+                            pointColor: color,
+                            pointStrokeColor: color,
+                            pointHighlightFill: color,
+                            pointHighlightStroke: color,
+                            data: data.lists.map(function (item2) {
+                                if (item2.Fulfillment > 100)
+                                    return 100;
+                                else
+                                    return item2.Fulfillment;
+                            })
+                        }
+                    ]
+                };
+
+                var barChartOptions = {
+                    scaleBeginAtZero: true,
+                    scaleShowGridLines: true,
+                    scaleGridLineColor: 'rgba(0,0,0,.05)',
+                    scaleGridLineWidth: 1,
+                    scaleShowHorizontalLines: true,
+                    scaleShowVerticalLines: true,
+                    barShowStroke: true,
+                    barStrokeWidth: 2,
+                    barValueSpacing: 5,
+                    barDatasetSpacing: 1,
+                    legendTemplate: '<ul class="<%=name.toLowerCase()%>-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>',
+                    responsive: true,
+                    maintainAspectRatio: true
+                }
+
+                barChartOptions.datasetFill = false
+                barChart.Bar(barChartData, barChartOptions)
+
+                for (i = 0; i < data.lists.length; i++) {
+                    $('<div id="column-' + footer + i + '"></div>').addClass('col-sm-4 col-xs-6').appendTo('#' + footer);
+                    $('<div id="div-' + footer + i + '"></div>').addClass('description-block border-right').appendTo('#column-' + footer + i);
+                    var clase = data.lists[i].Fulfillment < 80 ? 'description-percentage text-red' : data.lists[i].Fulfillment >= 80 ? 'description-percentage text-yellow' : 'description-percentage text-green';
+                    var p = data.lists[i].Fulfillment > 100 ? 100 : (data.lists[i].Fulfillment);
+                    $('<span id="span-' + footer + i + '"> <i class="fa fa-caret-up"></i>' + p + ' %</span >').addClass(clase).appendTo('#div-' + footer + i);
+                    $('<h5 id="h5-' + footer + i + '" >' + data.lists[i].ItemName + '</h5>').addClass('description-header').appendTo('#div-' + footer + i);
+                    $('<span style="color:#c1c7d1"> A.Fisico  ' + data.lists[i].Parameter + '</span>').addClass('description-text').appendTo('#div-' + footer + i);
+                    $('<br/><span style="color:#0AD6DC">A.Teorico ' + data.lists[i].Sampling + '</span>').addClass('description-text').appendTo('#div-' + footer + i);
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert('There was an error while fetching data!');
+            }
+        });
+    }
+</script>

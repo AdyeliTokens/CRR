@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@section Styles {
+
+}
+
+@*<div class="jumbotron">
+    <h4>CRR</h4>
+</div>*@
+
+<div class="row">
+    <div class="box-body" id="desperdicio-content"></div>
+</div>
+
+@section Scripts {
+
+    @Scripts.Render("~/JS/jquery")
+    <script>
+        $(function ()
+        {
+            'use strict';
+            setInterval(loadData(), 1800000);// Se ejecuta cada 30min~1800000 mls
+        });
+
+        function loadData()
+        {
+            var d = new Date();
+
+            var month = d.getMonth() + 1;
+            var day = d.getDate();
+
+            var today = d.getFullYear() + '/' +
+                (('' + month).length < 2 ? '0' : '') + month + '/' +
+                (('' + day).length < 2 ? '0' : '') + day;
+
+            var data = { dateBegin: today, dateEnd: today };
+            
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                traditional: true,
+                data: JSON.stringify(data),
+                url: "/Secondary/WasteData/Report",
+                success: function (data) {
+                    $("#desperdicio-content").html("");
+                    $("#desperdicio-content").html(data);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert('There was an error while fetching data!');
+                }
+            });
+        }
+    </script>
+
+}

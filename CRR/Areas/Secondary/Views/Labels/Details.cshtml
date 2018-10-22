@@ -1,0 +1,139 @@
+﻿@model CRR.Models.Entidades.Specs.Label
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Label</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Waste.IdWorkCenter)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Waste.IdWorkCenter)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Lot)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Lot)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Consecutive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Consecutive)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ManufacturingCenter)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ManufacturingCenter)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductionDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProductionDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExpirationDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExpirationDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProductCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProductDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LabelNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LabelNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FlashPoint)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FlashPoint)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Weight)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Weight)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExtractionBank)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExtractionBank)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExtractionModule)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExtractionModule)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Operator)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Operator)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,159 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    @Styles.Render("~/Style/Select2")
+}
+
+<div class="row">
+    <div class="box box-primary">
+        <div class="box-header">
+            <div>
+                <ul id="menu" class="nav nav-tabs">
+                    <li id="li-planta"><a href="#" id="planta" data-toggle="tab">Planta</a></li>
+                    <li id="li-celula"><a href="#" id="celula" data-toggle="tab">Celula</a></li>
+                    <li id="li-linkup"><a href="#" id="linkup" data-toggle="tab">Linkup</a></li>
+                </ul>
+            </div>
+            
+            <div class="row" id="parametros">
+                <div id="calendar" class="col text-left">
+                    <input id="week" type="week" name="week" value="">
+                </div>
+                <div id="s-multiple" class="col text-right">
+                    <select id="select-multiple" class="form-control select2"  data-placeholder="Select one" style="width: 20%"></select>
+                    @*<select id="select-turn" class="form-control select2" multiple="multiple" data-placeholder="Select multiple" style="width: 10%">
+                        <option>M</option>
+                        <option>V</option>
+                        <option>N</option>
+                    </select>*@
+                </div>
+            </div>
+        </div>
+
+        <div class="box-body" id="result-content"></div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/JS/select2")
+    @Scripts.Render("~/JS/DataPicker")
+
+    <script>
+        $(document).ready(function () {
+            'use strict';
+            var today = new Date();
+            $('.select2').select2()
+            $("#s-multiple").hide();
+            
+
+            var weekControl = document.querySelector('input[type="week"]');
+            weekControl.value = today.getFullYear() + '-W' + getWeekNo(today);
+
+            $("#week").on("change", function(){
+                 var weekNo = ($("#week").val()).substring(9, 6);
+
+                if( $("#menu li.active").attr('id') ==  "li-planta")
+                {
+                    loadData("/Secondary/SelfControlSpecs/Report", { weekNo: weekNo }); 
+                }
+            });
+
+
+            $("#select-multiple").on("change", function () {
+                var weekNo = ($("#week").val()).substring(9, 6);
+                var li = $("#menu li.active").attr('id');
+
+                switch (li)
+                {
+                    case "li-celula":
+                        loadData("/Secondary/Departments/Report", { weekNo: weekNo, Departments: $("#select-multiple :selected").text(), Shift: null });
+                        break;
+                    case "li-linkup":
+                        loadData("/Secondary/WorkCenters/Report", { weekNo: weekNo, WorkCenters: $("#select-multiple :selected").text() });
+                        break;
+                }
+            });
+
+            $("a").on("click", function () {
+                switch ($(this).attr('id')) {
+                    case 'planta':
+                        $(this).parent().addClass('active').siblings().removeClass('active');
+                        $("#s-multiple").hide();
+                        $("#result-content").html("");
+                         var weekNo = ($("#week").val()).substring(9, 6);
+                        loadData("/Secondary/SelfControlSpecs/Report", { weekNo: weekNo }); 
+                        break;
+                    case 'celula':
+                        loadSelect("/Secondary/Departments/GetDepartments");
+                        $("#result-content").html("");
+                        $(this).parent().addClass('active').siblings().removeClass('active');
+                        $("#s-multiple").show();
+                        break;
+                    case 'linkup':
+                        loadSelect("/Secondary/WorkCenters/GetWorkCenters");
+                        $("#result-content").html("");
+                        $(this).parent().addClass('active').siblings().removeClass('active');
+                        $("#s-multiple").show();
+                        break;
+                }
+            });
+
+        });
+        
+        function loadData(url, data) {
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                traditional: true,
+                url: url,
+                data: JSON.stringify(data),
+                success: function (data) {
+                    $("#result-content").html("");
+                    $("#result-content").html(data);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert('There was an error while fetching data!');
+                }
+            });
+        }
+
+        function loadSelect(url) {
+            $('#select-multiple')
+                .find('option')
+                .remove()
+                .end();
+
+            $.ajax({
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json",
+                url: url,
+                success: function (data) {
+                    $.each(data.list, function (key, value) {
+                        $('#select-multiple')
+                            .append($("<option></option>")
+                                .attr("value", key)
+                                .text(value));
+                    });
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert('There was an error while fetching data!');
+                }
+            });
+        }
+
+        function getWeekNo(date) {
+            var onejan = new Date((new Date()).getFullYear(), 0, 1);
+            var dayOfYear = ((date - onejan + 1) / 86400000);
+
+            return Math.ceil(dayOfYear / 7);
+        }
+
+
+    </script>
+
+}

@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>@ViewBag.Title - CRR</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Style/Bootstrap")
+    @Styles.Render("~/Style/Font-Awesome")
+    @Styles.Render("~/Style/AdminLTE")
+    @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("Styles", required: false)
+    <style>
+        .navbar {
+            background-color: #003366;
+            background-image: none;
+        }
+
+        body {
+            padding-top: 70px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+
+                <!-- Header Navbar: style can be found in header.less -->
+                <nav class="navbar navbar-static-top">
+                    <!-- Sidebar toggle button-->
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <a href="@Url.Action("Login","Account", new { area="Admin"})" class="sidebar-toggle" data-toggle="push-menu" role="button"><h4>Login</h4></a>
+                    }
+                    else
+                    {
+                        <div class="navbar-custom-menu">
+                            <ul class="nav navbar-nav">
+                                <!-- User Account: style can be found in dropdown.less -->
+                                <li class="dropdown user user-menu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <img src="../bower_components/admin-lte/img/user-default-160x160.png" class="user-image" alt="User Image">
+                                        <span class="hidden-xs">@User.Identity.Name</span>
+                                    </a>
+                                    <ul class="dropdown-menu" style="background-color: #003366">
+                                        <!-- User image -->
+                                        <li class="user-header">
+                                            <img src="../bower_components/admin-lte/img/user-default-160x160.jpg" class="img-circle" alt="User Image">
+                                            <p>
+                                                @User.Identity.Name
+                                            </p>
+                                        </li>
+
+                                        <!-- Menu Footer-->
+                                        <li class="user-footer" style="background-color:#e6f3ff">
+                                            <div class="pull-right">
+                                                @using (Html.BeginForm("LogOff", "Account", new { area = "Admin" }, FormMethod.Post, new { id = "logoutForm" }))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                    <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-default btn-flat">Log off</a>
+                                                }
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!-- Control Sidebar Toggle Button -->
+                                <li>
+                                    <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                                        <i class="fa fa-gears"></i>
+                                    </button>
+                                    <div class="nav-collapse collapse">
+                                        <ul class="nav">
+                                            @*<li>@Html.ActionLink("User", "Index", "Users", new { Area = "Admin" }, new { })</li>
+                                                <li>@Html.ActionLink("Rol", "Index", "Rol", new { Area = "Admin" }, new { })</li>*@
+                                            <li>@Html.ActionLink("CRR", "Index", "WasteData", new { Area = "Secondary" }, new { })</li>
+                                            <li>@Html.ActionLink("WasteDepartments", "Index", "WasteDepartments", new { Area = "Secondary" }, new { })</li>
+                                            <li>@Html.ActionLink("WasteWorkCenters", "Index", "WasteWorkCenters", new { Area = "Secondary" }, new { })</li>
+                                            <li>@Html.ActionLink("AutoControl", "Index", "SelfControlSpecs", new { Area = "Secondary" }, new { })</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - CRR</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/JS/jquery")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/JS/Complements")
+    @Scripts.Render("~/JS/AdminLTE")
+    @Scripts.Render("~/JS/Demo")
+    <script src="~/Scripts/app.js"></script>
+    @Scripts.Render("~/JS/Bootstrap")
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,51 @@
+﻿@model CRR.Models.Entidades.WasteData
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>WasteData</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IdWorkCenter)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdWorkCenter)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VolumeWaste)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VolumeWaste)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdEmployee)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdEmployee)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RegistrationDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegistrationDate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

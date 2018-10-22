@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    @Styles.Render("~/Style/DataRangePicker")
+}
+
+<div id="parameters">
+    @Html.Hidden("dateBegin")
+    @Html.Hidden("dateEnd")
+</div>
+
+<div class="row">
+    <div class="box box-primary">
+        <div class="box-header">
+            <div class="box-tools">
+                <a href="@Url.Action("Create", "WasteData")" class="btn btn-primary btn-sm">
+                    <span class="fa fa-plus" aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="form-group">
+                <label>Date range:</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input type="text" class="form-control" id="reservation">
+                </div>
+                <!-- /.input group -->
+            </div>
+            <!-- /.form group -->
+        </div>
+
+        <div class="box-body" id="desperdicio-content">
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/JS/jquery")
+    @Scripts.Render("~/JS/DataPicker")
+
+    <script>
+        $(function ()
+        {
+            'use strict';
+            $('#reservation').daterangepicker({ 
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    firstDay: 1
+                } 
+            });
+
+            loadData();
+                        
+            $("#reservation").on("change", function () {
+                var dateArray = ($("#reservation").val()).split("-");
+                $("#dateBegin").val(dateArray[0]);
+                $("#dateEnd").val(dateArray[1]);
+                loadData();
+            });
+
+        });
+
+        function loadData()
+        {
+            var dateArray = ($("#reservation").val()).split("-");
+            var data = { dateBegin: dateArray[0], dateEnd: dateArray[1]};
+            $("#desperdicio-content").html("");
+
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                traditional: true,
+                url: "/Secondary/WasteData/Report",                
+                data: JSON.stringify(data),
+                success: function (data) {
+                    $("#desperdicio-content").html(data);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert('There was an error while fetching data!');
+                }
+            });
+        }
+    </script>
+
+}

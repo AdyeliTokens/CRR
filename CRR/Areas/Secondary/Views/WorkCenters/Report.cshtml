@@ -1,0 +1,259 @@
+﻿@model CRR.Models.Vistas.Helpers.Parameters
+
+@{
+    ViewBag.Title = "Report";
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    @Styles.Render("~/Style/Bootstrap")
+}
+
+<div id="parameters">
+    @Html.Hidden("weekNo")
+    @Html.Hidden("parameter1")
+    @Html.Hidden("parameter2")
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Self-Control Cell Report </h3>
+
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-wrench"></i>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Download</a></li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">               
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="text-center">
+                            <strong>Autocontrol </strong>
+                        </p>
+                        <div class="chart">
+                            <canvas id="resumeChart" style="height: 180px;"></canvas>
+                        </div>
+                        <!-- /.chart-responsive -->
+                    </div>
+                    <div class="col-md-8">
+                        <p class="text-center">
+                            <strong>Autocontrol Semana</strong>
+                        </p>
+                        <div class="chart">
+                            <canvas id="weeklyChart" style="height: 180px;"></canvas>
+                        </div>
+                        <!-- /.chart-responsive -->
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- ./box-body -->
+
+            <div id="box-footer-resume" class="col-sm-12 col-md-4">
+                <p class="text-center">
+                    <strong>Autocontrol </strong>
+                </p>
+            </div>
+            <div id="box-footer-weekly" class="col-sm-12 col-md-8">
+                <p class="text-center">
+                    <strong>AutoControl Semanal</strong>
+                </p>
+            </div>
+
+            </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->
+
+<script src="http://www.chartjs.org/dist/2.7.2/Chart.bundle.js"></script>
+@Scripts.Render("~/JS/jquery")
+
+@Scripts.Render("~/JS/Sparkline")
+@Scripts.Render("~/JS/Bootstrap")
+@Scripts.Render("~/JS/DataPicker")
+
+<script>
+    $(function () {
+        'use strict';
+        $("#box-footer-resume").html('');
+        $("#box-footer-weekly").html('');
+        getData("/Secondary/WorkCenters/Parametros");
+    });
+
+    function getData(url) {
+        $.ajax({
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            traditional: true,
+            type: "POST",
+            url: url,
+            data: JSON.stringify({ weekNo: $("#weekNo").val(), WorkCenters: $("#parameter1").val(), Shifts: $("#parameter2").val() }),
+            success: function (data) {
+                getChart(data, "resumeChart", "box-footer-resume");
+                getChart(data, "weeklyChart", "box-footer-weekly");
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert('There was an error while fetching data!');
+            }
+        });
+    }
+
+    function getChart(data, divChart, divInfo) {
+        var ctx = document.getElementById(divChart).getContext("2d");
+        var list;
+
+        if (divChart == "weeklyChart") {
+            list = data.lists.filter(function (item) {
+                return item.DayofWeek != 'Resumen Semanal';
+            });
+        }
+        else {
+            list = data.lists.filter(function (item) {
+                return item.DayofWeek == 'Resumen Semanal';
+            });
+        }
+
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: list.map(function (item2) {
+                    return item2.DayofWeek;                  
+                }),
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Aceptacion',
+                        data: list.map(function (item2) {
+                            return 80;
+                        }),
+                        borderWidth: 2,
+                        fill: false,
+                        borderColor: '#DF0101'
+                    },
+                    {
+                        type: 'bar',
+                        label: 'P.Fisico T1',
+                        stack: 'Stack 0',
+                        data: list.map(function (item2) {
+                            return Math.round((item2.Shift[0].Physical.Fulfillment * 0.3),2);
+                        }),
+                        backgroundColor: '#21618C'
+                    },
+                    {
+                        type: 'bar',
+                        label: 'P.Fisico T2',
+                        stack: 'Stack 0',
+                        data: list.map(function (item2) {
+                            return Math.round((item2.Shift[1].Physical.Fulfillment * 0.3),2);
+                        }),
+                        backgroundColor: '#2E86C1'
+                    },
+                    {
+                        type: 'bar',
+                        label: 'P.Fisico T3',
+                        stack: 'Stack 0',
+                        data: list.map(function (item2) {
+                            return Math.round((item2.Shift[2].Physical.Fulfillment * 0.3),2);
+                        }),
+                        backgroundColor: '#5DADE2'
+                    },
+                    {
+                        type: 'bar',
+                        label: 'P.Visual T1',
+                        stack: 'Stack 1',
+                        data: list.map(function (item2) {
+                            return Math.round((item2.Shift[0].Visual.Fulfillment * 0.3),2);
+                        }),
+                        backgroundColor: '#117A65'
+                    },
+                    {
+                        type: 'bar',
+                        label: 'P.Visual T2',
+                        stack: 'Stack 1',
+                        data: list.map(function (item2) {
+                            return Math.round((item2.Shift[1].Visual.Fulfillment * 0.3),2);
+                        }),
+                        backgroundColor: '#73C6B6'
+                    },
+                    {
+                        type: 'bar',
+                        label: 'P.Visual T3',
+                        stack: 'Stack 1',
+                        data: list.map(function (item2) {
+                            return Math.round((item2.Shift[2].Visual.Fulfillment * 0.3),2);
+                        }),
+                        backgroundColor: '#D0ECE7'
+                    },
+                ]
+            },
+            options: {
+                responsive: false,
+                legend: {
+                    position: 'bottom'
+                },
+                scales: {
+                    xAxes: [{
+                        stacked: true
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+        });
+        new Chart(ctx, chart);
+
+        for (i = 0; i < list.length; i++)
+        {
+            $('<div id="' + divInfo + '-row-' + i + '"></div>').addClass('row').appendTo('#' + divInfo);
+            $('<h4 id="h4-' + i + '" style="color:#3c8dbc">' + list[i].DayofWeek + '</h4>').addClass('text-rigth').appendTo('#' + divInfo + '-row-' + i);
+            $('<div id="' + divInfo + '-col-' + i + '"></div>').addClass('row').appendTo('#' + divInfo + '-row-' + i);
+            $('<div id="' + divInfo + '-color-' + i + '"></div>').addClass('color-palette-set').appendTo('#' + divInfo + '-col-' + i); 
+           
+            for (t = 0; t < 3; t++)
+            {
+                var claseF = list[i].Shift[t].Physical.Fulfillment < 80 ? 'description-percentage text-red' : list[i].Shift[t].Physical.Fulfillment >= 80 && list[i].Shift[t].Physical.Fulfillment < 100  ? 'description-percentage text-yellow' : 'description-percentage text-green';
+                var claseV = list[i].Shift[t].Visual.Fulfillment < 80 ? 'description-percentage text-red' : list[i].Shift[t].Visual.Fulfillment >= 80 && list[i].Shift[t].Physical.Fulfillment < 100 ? 'description-percentage text-yellow' : 'description-percentage text-green';
+                var pF = list[i].Shift[0].Physical.Fulfillment > 100 ? 100 : (list[i].Shift[t].Physical.Fulfillment);
+                var pV = list[i].Shift[0].Visual.Fulfillment > 100 ? 100 : (list[i].Shift[t].Visual.Fulfillment);
+
+                $('<div id="' + divInfo + i + t + '"><span style="color:#3c8dbc">Turno ' + (t + 1) + '</span></div>').addClass('col-sm-3 col-md-3').appendTo('#' + divInfo + '-color-' + i);
+                
+                $('<br/><span>T <i class="fa fa-caret-up"></i>' + pF + ' %</span >').addClass(claseF).appendTo('#' + divInfo + i + t);
+                $('<br/><span>D <i class="fa fa-caret-up"></i>' + Math.round((pF * 0.3),2) + ' %</span >').addClass(claseF).appendTo('#' + divInfo + i + t);
+                $('<br/><span style="color:#c1c7d1"> A. Fisico   ' + list[i].Shift[t].Physical.Parameter + '/' + list[i].Shift[t].Physical.Sampling + '</span>').addClass('description-text').appendTo('#' + divInfo + i + t);
+               
+
+                $('<br/><span>T <i class="fa fa-caret-up"></i>' + pV + ' %</span>').addClass(claseV).appendTo('#' + divInfo + i + t);
+                $('<br/><span>D <i class="fa fa-caret-up"></i>' + Math.round((pV * 0.3),2) + ' %</span>').addClass(claseV).appendTo('#' + divInfo + i + t);
+                $('<br/><span style="color:#0AD6DC"> A. Visual ' + list[i].Shift[t].Visual.Parameter + '/' + list[i].Shift[t].Visual.Sampling + '</span>').addClass('description-text').appendTo('#' + divInfo + i + t);
+            }
+        }
+        
+    }
+
+</script>
+
+
+
+
+
+
+
+
