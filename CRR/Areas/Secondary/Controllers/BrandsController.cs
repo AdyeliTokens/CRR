@@ -122,6 +122,7 @@ namespace CRR.Areas.Secondary.Controllers
             if (ModelState.IsValid)
             {
                 try
+                {
                     using (var ctx = new CRRStoredProcedures())
                     {
                         var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
