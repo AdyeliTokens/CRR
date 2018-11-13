@@ -43,13 +43,13 @@
                                 <!-- User Account: style can be found in dropdown.less -->
                                 <li class="dropdown user user-menu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <img src="../bower_components/admin-lte/img/user-default-160x160.png" class="user-image" alt="User Image">
+                                        <img src="~/bower_components/admin-lte/img/user-default-160x160.png" class="user-image" alt="User Image">
                                         <span class="hidden-xs">@User.Identity.Name</span>
                                     </a>
                                     <ul class="dropdown-menu" style="background-color: #003366">
                                         <!-- User image -->
                                         <li class="user-header">
-                                            <img src="../bower_components/admin-lte/img/user-default-160x160.jpg" class="img-circle" alt="User Image">
+                                            <img src="~/bower_components/admin-lte/img/user-default-160x160.jpg" class="img-circle" alt="User Image">
                                             <p>
                                                 @User.Identity.Name
                                             </p>
@@ -75,8 +75,9 @@
                                     <div class="nav-collapse collapse">
                                         <ul class="nav">
                                             @*<li>@Html.ActionLink("User", "Index", "Users", new { Area = "Admin" }, new { })</li>
-                                                <li>@Html.ActionLink("Rol", "Index", "Rol", new { Area = "Admin" }, new { })</li>*@
+                                            <li>@Html.ActionLink("Rol", "Index", "Rol", new { Area = "Admin" }, new { })</li>*@
                                             <li>@Html.ActionLink("CRR", "Index", "WasteData", new { Area = "Secondary" }, new { })</li>
+                                            <li>@Html.ActionLink("Labels", "Index", "Labels", new { Area = "Secondary" }, new { })</li>
                                             <li>@Html.ActionLink("WasteDepartments", "Index", "WasteDepartments", new { Area = "Secondary" }, new { })</li>
                                             <li>@Html.ActionLink("WasteWorkCenters", "Index", "WasteWorkCenters", new { Area = "Secondary" }, new { })</li>
                                             <li>@Html.ActionLink("AutoControl", "Index", "SelfControlSpecs", new { Area = "Secondary" }, new { })</li>

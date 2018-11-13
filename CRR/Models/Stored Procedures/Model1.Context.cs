@@ -107,5 +107,31 @@ namespace CRR.Models.Stored_Procedures
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CRR_CigaretteSpecifications_Result>("CRR_CigaretteSpecifications", iOrderNoParameter);
         }
+    
+        public virtual ObjectResult<Nullable<double>> CRR_CigaretteWeight(string iOrderNo)
+        {
+            var iOrderNoParameter = iOrderNo != null ?
+                new ObjectParameter("iOrderNo", iOrderNo) :
+                new ObjectParameter("iOrderNo", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<double>>("CRR_CigaretteWeight", iOrderNoParameter);
+        }
+    
+        public virtual ObjectResult<CRR_ProcessOrderList_Result> CRR_ProcessOrderList(Nullable<System.DateTime> iToDAte, Nullable<System.DateTime> iFromDAte, string iLinkupID)
+        {
+            var iToDAteParameter = iToDAte.HasValue ?
+                new ObjectParameter("iToDAte", iToDAte) :
+                new ObjectParameter("iToDAte", typeof(System.DateTime));
+    
+            var iFromDAteParameter = iFromDAte.HasValue ?
+                new ObjectParameter("iFromDAte", iFromDAte) :
+                new ObjectParameter("iFromDAte", typeof(System.DateTime));
+    
+            var iLinkupIDParameter = iLinkupID != null ?
+                new ObjectParameter("iLinkupID", iLinkupID) :
+                new ObjectParameter("iLinkupID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CRR_ProcessOrderList_Result>("CRR_ProcessOrderList", iToDAteParameter, iFromDAteParameter, iLinkupIDParameter);
+        }
     }
 }

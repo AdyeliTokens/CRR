@@ -57,14 +57,21 @@ namespace CRR.Areas.Secondary.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(WasteData wasteData)
+        public ActionResult Create(WasteData wasteData, string orderNo, string codeFA, string Operator)
         {
             if (ModelState.IsValid)
             {
+                var order = (orderNo == null || orderNo == "")
+                    ? db.FastShiftData.Where(f => f.IdWorkcenter == wasteData.IdWorkCenter).OrderByDescending(f => f.RegistrationDate).Select(f => f.OrderNo).FirstOrDefault()
+                    : Int32.Parse(orderNo);
                 ViewBag.IdWorkCenter = new SelectList(db.WorkCenters.OrderBy(x => x.Name), "Name", "Name", wasteData.IdWorkCenter);
                 wasteData.Shift = Shift.Get();
-                wasteData.IdBrand = db.FastShiftData.Where(f => f.IdWorkcenter == wasteData.IdWorkCenter && f.OrderStatus == 2).OrderByDescending(f => f.RegistrationDate).Select(f => f.IdBrand).FirstOrDefault();
-                wasteData.CigaretteWeight = db.Brands.Where(b => b.CodeFA == wasteData.IdBrand).Select(b => b.CigaretteWeight).FirstOrDefault();
+                wasteData.IdBrand = (codeFA == null || codeFA == "")
+                    ? db.FastShiftData.Where(f => f.IdWorkcenter == wasteData.IdWorkCenter && f.OrderStatus == 2).OrderByDescending(f => f.RegistrationDate).Select(f => f.IdBrand).FirstOrDefault()
+                    : codeFA;
+                wasteData.CigaretteWeight = CigaretteSpecificationsServices.getCigaretteWeigth(order.ToString()) == 0 
+                    ? db.Brands.Where(b => b.CodeFA == wasteData.IdBrand).Select(b => b.CigaretteWeight).FirstOrDefault()
+                    : CigaretteSpecificationsServices.getCigaretteWeigth(order.ToString());
                 wasteData.CigaretteWaste = Double.IsInfinity(wasteData.VolumeWaste / wasteData.CigaretteWeight) ? 0 : wasteData.VolumeWaste / wasteData.CigaretteWeight;
                 wasteData.RegistrationDate = DateTime.Now;
                 IRespuestaServicio<User> user = UserServices.GetUser(User.Identity.GetUserId());
@@ -73,8 +80,7 @@ namespace CRR.Areas.Secondary.Controllers
                 db.WasteData.Add(wasteData);
                 db.SaveChanges();
 
-                var orderNo = db.FastShiftData.Where(f => f.IdWorkcenter == wasteData.IdWorkCenter && f.OrderStatus == 2).OrderByDescending(f => f.RegistrationDate).Select(f => f.OrderNo).FirstOrDefault();
-                bool label = CigaretteSpecificationsServices.addLabel(orderNo.ToString(), wasteData);
+                bool label = CigaretteSpecificationsServices.addLabel(order.ToString(), wasteData, Operator);
 
                 return RedirectToAction("Index", "Labels", new { area = "Secondary" });
             }
@@ -120,6 +126,7 @@ namespace CRR.Areas.Secondary.Controllers
         public ActionResult Report(DateTime dateBegin, DateTime dateEnd)
         {
             IList<CRRByDepartment> listadelistas = new List<CRRByDepartment>();
+            dateEnd = dateEnd.AddHours(23).AddMinutes(59).AddSeconds(59);
 
             if (FastShiftDataServices.GetData(dateBegin, dateEnd))
             {
@@ -136,31 +143,33 @@ namespace CRR.Areas.Secondary.Controllers
                     crrByDepartment.dateEnd = dateEnd;
 
                     var workCenters = db.WorkCenters.Where(w => w.DepartmentName == item.Name).ToList();
-                    double? totalWaste = 0;
+                    
+                        double? totalWaste = 0;
 
-                    foreach (var wItem in workCenters)
-                    {
-                        totalWaste = totalWaste + wasteCRR.Where(f => f.IdWorkCenter == wItem.Name).Select(f => f.CigaretteWaste).Sum();// Cigarrillos
-                    }
-
-                    var values = FastShiftData
-                        .Where(x => (x.IdDepartment == item.Name))
-                        .GroupBy(rd => rd.IdDepartment, rd => rd.TargetQty, (code, cant) => new CRRReportView
+                        foreach (var wItem in workCenters)
                         {
-                            CRR = Double.IsNaN((double)totalWaste / ((double)totalWaste + cant.Sum())) ? 0 : Math.Round((double)totalWaste / ((double)totalWaste + cant.Sum()), 3),
-                            VolumenProduccion = Math.Round(cant.Sum(), 3),
-                            VolumenWaste = Math.Round((double)totalWaste, 2),
-                            Specs = specsCRR.Where(s => s.IdDepartment == code).Select(s => s.Value).FirstOrDefault(),
-                            PorcentajeVolumen = Math.Round(cant.Sum() * 100 / FastShiftData.Where(f=> f.IdDepartment == item.Name).Select(f=> f.ProdVol).Sum() ,0)
-                        }).ToList();
+                            totalWaste = totalWaste + wasteCRR.Where(f => f.IdWorkCenter == wItem.Name).Select(f => f.CigaretteWaste).Sum();// Cigarrillos
+                        }
 
-                    if (values.Count() != 0)
-                    {
-                        crrByDepartment.Values = new List<CRRReportView>();
-                        crrByDepartment.Values = values;
+                        var values = FastShiftData
+                            .Where(x => (x.IdDepartment == item.Name))
+                            .GroupBy(rd => rd.IdDepartment, rd => rd.TargetQty, (code, cant) => new CRRReportView
+                            {
+                                CRR = Double.IsNaN((double)totalWaste / ((double)totalWaste + cant.Sum())) ? 0 : Math.Round((double)totalWaste / ((double)totalWaste + cant.Sum()), 3),
+                                VolumenProduccion = Math.Round(cant.Sum(), 3),
+                                VolumenWaste = Math.Round((double)totalWaste, 2),
+                                Specs = specsCRR.Where(s => s.IdDepartment == code).Select(s => s.Value).FirstOrDefault(),
+                                PorcentajeVolumen = Math.Round(cant.Sum() * 100 / FastShiftData.Where(f => f.IdDepartment == item.Name).Select(f => f.ProdVol).Sum(), 0)
+                            }).ToList();
 
-                        listadelistas.Add(crrByDepartment);
-                    }
+                        if (values.Count() != 0)
+                        {
+                            crrByDepartment.Values = new List<CRRReportView>();
+                            crrByDepartment.Values = values;
+
+                            listadelistas.Add(crrByDepartment);
+                        }
+                    
                 }
             }
             
@@ -184,7 +193,7 @@ namespace CRR.Areas.Secondary.Controllers
             IList<CRRReportView> lists = new List<CRRReportView>();
             foreach (var item in workCenters)
             {
-                var faWC = db.FastShiftData.Where(fsd => fsd.IdWorkcenter == item.Name).Select(fsd => fsd.IdBrand);
+                var faWC = FastShiftData.Where(fsd => fsd.IdWorkcenter == item.Name).Select(fsd => fsd.IdBrand);
 
                 foreach (var faCode in faWC)
                 {

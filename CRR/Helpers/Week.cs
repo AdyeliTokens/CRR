@@ -39,7 +39,7 @@ namespace CRR.Helpers
         public static List<DaysOfWeek> getDaysofWeek(int weekNo)
         {
             List<DaysOfWeek> daysOfWeek = new List<DaysOfWeek>();
-            string[] listDay = new string[] { "Monday", "Thuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+            string[] listDay = new string[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
             DateTime FirstDay = FirstDateOfWeekISO8601(DateTime.Now.Year, weekNo);
 
             foreach(var day in listDay)

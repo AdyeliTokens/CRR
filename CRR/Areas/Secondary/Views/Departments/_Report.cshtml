@@ -38,18 +38,18 @@
 
             </div>
             <!-- /.box-header -->
-            <div class="box-body">               
+            <div class="box-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <p class="text-center">
-                            <strong>Autocontrol </strong>
+                            <strong>Autocontrol  </strong>
                         </p>
                         <div class="chart">
                             <canvas id="resumeChart" style="height: 180px;"></canvas>
                         </div>
                         <!-- /.chart-responsive -->
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <p class="text-center">
                             <strong>Autocontrol Semana</strong>
                         </p>
@@ -63,27 +63,26 @@
             </div>
             <!-- ./box-body -->
 
-            <div id="box-footer-resume" class="col-sm-12 col-md-4">
+            <div id="box-footer-resume" class="col-sm-12 col-md-6">
                 <p class="text-center">
-                    <strong>Autocontrol </strong>
+                    <strong>Autocontrol Diario</strong>
                 </p>
             </div>
-            <div id="box-footer-weekly" class="col-sm-12 col-md-8">
+            <div id="box-footer-weekly" class="col-sm-12 col-md-6">
                 <p class="text-center">
                     <strong>AutoControl Semanal</strong>
                 </p>
             </div>
 
-            </div>
+        </div>
         <!-- /.box -->
     </div>
     <!-- /.col -->
 </div>
 <!-- /.row -->
 
-<script src="http://www.chartjs.org/dist/2.7.2/Chart.bundle.js"></script>
 @Scripts.Render("~/JS/jquery")
-
+<script src="http://www.chartjs.org/dist/2.7.2/Chart.bundle.js"></script>
 @Scripts.Render("~/JS/Sparkline")
 @Scripts.Render("~/JS/Bootstrap")
 @Scripts.Render("~/JS/DataPicker")
@@ -93,7 +92,8 @@
         'use strict';
         $("#box-footer-resume").html('');
         $("#box-footer-weekly").html('');
-        getData("/Secondary/WorkCenters/Parametros");
+
+        getData("/Secondary/Departments/_Parametros");
     });
 
     function getData(url) {
@@ -103,7 +103,7 @@
             traditional: true,
             type: "POST",
             url: url,
-            data: JSON.stringify({ weekNo: $("#weekNo").val(), WorkCenters: $("#parameter1").val(), Shifts: $("#parameter2").val() }),
+            data: JSON.stringify({ weekNo: $("#weekNo").val(), Departments: $("#parameter1").val() }),
             success: function (data) {
                 getChart(data, "resumeChart", "box-footer-resume");
                 getChart(data, "weeklyChart", "box-footer-weekly");
@@ -114,31 +114,9 @@
         });
     }
 
-    function getChart(data, divChart, divInfo) {
+     function getChart(data, divChart, divInfo) {
         var ctx = document.getElementById(divChart).getContext("2d");
         var list;
-        const totalizer = {
-            id: 'totalizer',
-
-            beforeUpdate: chart => {
-                let totals = {}
-                let utmost = 0
-
-                chart.data.datasets.forEach((dataset, datasetIndex) => {
-                    if (chart.isDatasetVisible(datasetIndex)) {
-                        utmost = datasetIndex
-                        dataset.data.forEach((value, index) => {
-                            totals[index] = (totals[index] || 0) + value
-                        })
-                    }
-                })
-
-                chart.$totalizer = {
-                    totals: totals,
-                    utmost: utmost
-                }
-            }
-        }
 
         if (divChart == "weeklyChart") {
             list = data.lists.filter(function (item) {
@@ -155,7 +133,7 @@
             type: 'bar',
             data: {
                 labels: list.map(function (item2) {
-                    return "P.Fisico  P.Visual" + "\n" + item2.DayofWeek;                  
+                    return item2.DayofWeek;                  
                 }),
                 datasets: [
                     {
@@ -227,7 +205,7 @@
             options: {
                 responsive: false,
                 legend: {
-                    display: false
+                    position: 'bottom'
                 },
                 scales: {
                     xAxes: [{
@@ -236,51 +214,8 @@
                     yAxes: [{
                         stacked: true
                     }]
-                },
-                tooltips: {
-                    filter: function (tooltipItem, data) {
-                        var label = data.labels[tooltipItem.index];
-                        console.log(tooltipItem, data, label);
-                        return false;
-                    }
-                },
-                animation: {
-                    duration: 0,
-                    onComplete: function () {
-                        var ctx = this.chart.ctx;
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'bottom';
-                        ctx.fillStyle = "#fff";
-                        ctx.fontStyle = "bold";
-                        var maxBar = 0;
-                        this.data.datasets.forEach(function (dataset) {
-                            for (var i = 0; i < dataset.data.length; i++) {
-                                var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
-                                var y_pos = model.y + 18;
-                                //adjust negative values
-                                if (dataset.data[i] < 0) {
-                                    y_pos = (model.y) - 2;
-                                }
-
-                                if (maxBar / Math.abs(dataset.data[i]) < 30) {
-
-                                    var data = dataset.data[i];
-                                    ctx.fillText((data == 0 || data == 0.0) ? "NA" : data + "%", model.x, y_pos);
-                                }
-                            }
-                        });
-                    }
-                },
-            },
-            plugins: [{
-                beforeInit: function (chart) {
-                    chart.data.labels.forEach(function (e, i, a) {
-                        if (/\n/.test(e)) {
-                            a[i] = e.split(/\n/)
-                        }
-                    })
                 }
-            }]
+            }
         });
         new Chart(ctx, chart);
 
@@ -300,21 +235,22 @@
 
                 $('<div id="' + divInfo + i + t + '"><span style="color:#3c8dbc">Turno ' + (t + 1) + '</span></div>').addClass('col-sm-3 col-md-3').appendTo('#' + divInfo + '-color-' + i);
                 
-                $('<br/><span>Turno <i class="fa fa-caret-up"></i>' + pF + ' %</span >').addClass(claseF).appendTo('#' + divInfo + i + t);
-                $('<br/><span>Día <i class="fa fa-caret-up"></i>' + Math.round((pF * 0.3),2) + ' %</span >').addClass(claseF).appendTo('#' + divInfo + i + t);
+                $('<br/><span>T <i class="fa fa-caret-up"></i>' + pF + ' %</span >').addClass(claseF).appendTo('#' + divInfo + i + t);
+                $('<br/><span>D <i class="fa fa-caret-up"></i>' + Math.round((pF * 0.3),2) + ' %</span >').addClass(claseF).appendTo('#' + divInfo + i + t);
                 $('<br/><span style="color:#c1c7d1"> A. Fisico   ' + list[i].Shift[t].Physical.Parameter + '/' + list[i].Shift[t].Physical.Sampling + '</span>').addClass('description-text').appendTo('#' + divInfo + i + t);
                
 
-                $('<br/><span>Turno <i class="fa fa-caret-up"></i>' + pV + ' %</span>').addClass(claseV).appendTo('#' + divInfo + i + t);
-                $('<br/><span>Día <i class="fa fa-caret-up"></i>' + Math.round((pV * 0.3),2) + ' %</span>').addClass(claseV).appendTo('#' + divInfo + i + t);
+                $('<br/><span>T <i class="fa fa-caret-up"></i>' + pV + ' %</span>').addClass(claseV).appendTo('#' + divInfo + i + t);
+                $('<br/><span>D <i class="fa fa-caret-up"></i>' + Math.round((pV * 0.3),2) + ' %</span>').addClass(claseV).appendTo('#' + divInfo + i + t);
                 $('<br/><span style="color:#0AD6DC"> A. Visual ' + list[i].Shift[t].Visual.Parameter + '/' + list[i].Shift[t].Visual.Sampling + '</span>').addClass('description-text').appendTo('#' + divInfo + i + t);
             }
         }
         
     }
 
-</script>
+   
 
+</script>
 
 
 

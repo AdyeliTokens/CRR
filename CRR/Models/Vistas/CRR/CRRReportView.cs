@@ -9,6 +9,7 @@ namespace CRR.Models.Vistas.CRR
     {
         public string ItemName { get; set; }
         public string FAName { get; set; }
+        public int OrderNo { get; set; }
         public double? CRR { get; set; }
         public double? VolumenProduccion { get; set; }
         public double? VolumenWaste { get; set; }

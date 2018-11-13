@@ -14,7 +14,7 @@ namespace CRR.Services
     {
         private static CRRContext db = new CRRContext();
 
-        public static bool addLabel(string OrderNo, WasteData waste)
+        public static bool addLabel(string OrderNo, WasteData waste, string Operator)
         {
             try
             {
@@ -35,12 +35,12 @@ namespace CRR.Services
                     label.ProductDescription = data.BrandCode + " " + data.CutFiller + " " + market;
                     label.LabelNumber = "400000" + (waste.VolumeWaste * 100) + ((waste.VolumeWaste + 15) * 100) + "00" + label.Lot + data.CigaretteCode + "RTB";
                     label.FlashPoint = "N/A";
-                    label.Weight = waste.VolumeWaste;
-                    label.Quantity = waste.VolumeWaste + 15;
+                    label.Weight = waste.VolumeWaste + 15;
+                    label.Quantity = waste.VolumeWaste;
                     label.ExtractionBank = "0";
                     label.ExtractionModule = data.Linkup;
                     string[] lName = waste.IdUser.Split('@');
-                    label.Operator = lName[0];
+                    label.Operator = (Operator == null || Operator == "") ? lName[0].Replace("."," ") : Operator.ToUpper();
 
                     db.Label.Add(label);
                     db.SaveChanges();
@@ -53,5 +53,22 @@ namespace CRR.Services
                 return false;
             }
         }
+
+        public static double getCigaretteWeigth(string OrderNo)
+        {
+            try
+            {
+                using (var ctx = new CRRStoredProcedures())
+                {
+                    return (double) ctx.CRR_CigaretteWeight(OrderNo).FirstOrDefault();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.InnerException);
+                return 0;
+            }
+        }
+
     }
 }

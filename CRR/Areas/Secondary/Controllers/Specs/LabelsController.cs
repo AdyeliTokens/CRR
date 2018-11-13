@@ -18,7 +18,7 @@ namespace CRR.Areas.Secondary.Controllers.Specs
         // GET: Secondary/Labels
         public ActionResult Index()
         {
-            var label = db.Label.Include(l => l.Waste);
+            var label = db.Label.OrderByDescending(l=> l.Id).Include(l => l.Waste);
             return View(label.ToList());
         }
 

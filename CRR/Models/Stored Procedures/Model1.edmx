@@ -8,10 +8,18 @@
         <Function Name="CRR_CigaretteSpecifications" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="iOrderNo" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="CRR_CigaretteWeight" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="iOrderNo" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="CRR_Department" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="CRR_FastShiftData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="iFromDate" Type="datetime" Mode="In" />
           <Parameter Name="iToDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="CRR_ProcessOrderList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="iToDAte" Type="datetime" Mode="In" />
+          <Parameter Name="iFromDAte" Type="datetime" Mode="In" />
+          <Parameter Name="iLinkupID" Type="varchar" Mode="In" />
         </Function>
         <Function Name="CRR_ProductDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CodeFA" Type="varchar" Mode="In" />
@@ -57,7 +65,15 @@
             <Parameter Name="iToDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="CRR_CigaretteSpecifications" ReturnType="Collection(FastShiftData.CRR_CigaretteSpecifications_Result)">
-            <Parameter Name="iOrderNo" Mode="In" Type="String" />
+          <Parameter Name="iOrderNo" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="CRR_CigaretteWeight" ReturnType="Collection(Double)">
+          <Parameter Name="iOrderNo" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="CRR_ProcessOrderList" ReturnType="Collection(FastShiftData.CRR_ProcessOrderList_Result)">
+            <Parameter Name="iToDAte" Mode="In" Type="DateTime" />
+            <Parameter Name="iFromDAte" Mode="In" Type="DateTime" />
+            <Parameter Name="iLinkupID" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CRR_FastShiftData_Result">
@@ -137,6 +153,20 @@
           <Property Type="String" Name="DCD" Nullable="true" MaxLength="10" />
           <Property Type="String" Name="LaserPerforation" Nullable="true" MaxLength="3" />
           <Property Type="String" Name="MaterialDescription" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="CRR_ProcessOrderList_Result">
+          <Property Type="String" Name="LinkUp" Nullable="true" MaxLength="40" />
+          <Property Type="String" Name="OrderNo" Nullable="false" MaxLength="40" />
+          <Property Type="String" Name="Brand" Nullable="false" MaxLength="61" />
+          <Property Type="String" Name="CigaretteCode" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="10" />
+          <Property Type="DateTime" Name="ScheduledStartDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="ScheduledCompletionDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="ActualStartDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="EstimatedCompletionDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="ActualCompletionDate" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="ProducedQty" Nullable="false" Precision="28" Scale="10" />
+          <Property Type="Decimal" Name="TargetQty" Nullable="false" Precision="28" Scale="10" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -251,6 +281,25 @@
                 <ScalarProperty Name="DCD" ColumnName="DCD" />
                 <ScalarProperty Name="LaserPerforation" ColumnName="LaserPerforation" />
                 <ScalarProperty Name="MaterialDescription" ColumnName="MaterialDescription" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CRR_CigaretteWeight" FunctionName="FastShiftData.Store.CRR_CigaretteWeight" />
+          <FunctionImportMapping FunctionImportName="CRR_ProcessOrderList" FunctionName="FastShiftData.Store.CRR_ProcessOrderList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FastShiftData.CRR_ProcessOrderList_Result">
+                <ScalarProperty Name="LinkUp" ColumnName="LinkUp" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="CigaretteCode" ColumnName="CigaretteCode" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ScheduledStartDate" ColumnName="ScheduledStartDate" />
+                <ScalarProperty Name="ScheduledCompletionDate" ColumnName="ScheduledCompletionDate" />
+                <ScalarProperty Name="ActualStartDate" ColumnName="ActualStartDate" />
+                <ScalarProperty Name="EstimatedCompletionDate" ColumnName="EstimatedCompletionDate" />
+                <ScalarProperty Name="ActualCompletionDate" ColumnName="ActualCompletionDate" />
+                <ScalarProperty Name="ProducedQty" ColumnName="ProducedQty" />
+                <ScalarProperty Name="TargetQty" ColumnName="TargetQty" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

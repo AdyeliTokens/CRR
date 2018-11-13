@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using CRR.DAL;
 using CRR.Models.Entidades;
+using CRR.Models.Stored_Procedures;
 
 namespace CRR.Areas.Secondary.Controllers
 {
@@ -114,6 +115,30 @@ namespace CRR.Areas.Secondary.Controllers
             db.Brands.Remove(brand);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult GetListCodeFA(string IdWorkCenter)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                    using (var ctx = new CRRStoredProcedures())
+                    {
+                        var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+                        var lista = ctx.CRR_ProcessOrderList(today, today.AddDays(-7), IdWorkCenter).Select(p => new { p.OrderNo, p.Brand }).ToList();
+                        return Json(new { lista }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.InnerException);
+                    return Json(new { status = 400 }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                return Json(new { status = 400 }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         protected override void Dispose(bool disposing)

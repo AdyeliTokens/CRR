@@ -301,6 +301,9 @@
     <Compile Include="Models\Stored Procedures\CRR_FastShiftData_Result.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Stored Procedures\CRR_ProcessOrderList_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Stored Procedures\CRR_ProductDetails_Result.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -344,6 +347,7 @@
     <Compile Include="Models\Vistas\Helpers\Parameters.cs" />
     <Compile Include="Models\Vistas\SelfControl\QTMDataView.cs" />
     <Compile Include="Models\Vistas\SelfControl\RunningTimeDataView.cs" />
+    <Compile Include="Models\Vistas\SelfControl\SelfControlByDepartment.cs" />
     <Compile Include="Models\Vistas\SelfControl\SelfControlByShift.cs" />
     <Compile Include="Models\Vistas\SelfControl\SelfControlReportList.cs" />
     <Compile Include="Models\Vistas\SelfControl\SelfControlReportView.cs" />
@@ -758,6 +762,7 @@
     <Content Include="bower_components\chart.js\src\Chart.Line.js" />
     <Content Include="bower_components\chart.js\src\Chart.PolarArea.js" />
     <Content Include="bower_components\chart.js\src\Chart.Radar.js" />
+    <Content Include="bower_components\chart.js\src\Chat.Doughnut.CenterLabel.js" />
     <Content Include="bower_components\ckeditor\adapters\jquery.js" />
     <Content Include="bower_components\ckeditor\ckeditor.js" />
     <Content Include="bower_components\ckeditor\config.js" />
@@ -5905,6 +5910,7 @@
     <Content Include="bower_components\jquery\src\var\toString.js" />
     <Content Include="bower_components\jquery\src\wrap.js" />
     <Content Include="bower_components\js\Chart.2.3.0.min.js" />
+    <Content Include="bower_components\js\chartjs-plugin-datalabels.js" />
     <Content Include="bower_components\jvectormap\.gitignore" />
     <Content Include="bower_components\jvectormap\jquery-jvectormap.css" />
     <Content Include="bower_components\jvectormap\jquery-jvectormap.js" />
@@ -7605,7 +7611,7 @@
     <Content Include="Areas\Secondary\Views\SelfControlSpecs\Edit.cshtml" />
     <Content Include="Areas\Secondary\Views\SelfControlSpecs\Index.cshtml" />
     <Content Include="Areas\Secondary\Views\SelfControlSpecs\Report.cshtml" />
-    <Content Include="Areas\Secondary\Views\Departments\Report.cshtml" />
+    <Content Include="Areas\Secondary\Views\Departments\_Report.cshtml" />
     <Content Include="Areas\Secondary\Views\WorkCenters\Report.cshtml" />
     <Content Include="Areas\Secondary\Views\Labels\Create.cshtml" />
     <Content Include="Areas\Secondary\Views\Labels\Delete.cshtml" />
@@ -7616,6 +7622,7 @@
     <Content Include="bower_components\font-awesome\fonts\fontawesome-webfont.eot" />
     <Content Include="bower_components\font-awesome\fonts\fontawesome-webfont.woff" />
     <Content Include="bower_components\font-awesome\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Areas\Secondary\Views\Departments\Report.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

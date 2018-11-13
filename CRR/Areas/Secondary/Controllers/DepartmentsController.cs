@@ -62,6 +62,119 @@ namespace CRR.Areas.Secondary.Controllers
         [RenderAjaxPartialScripts]
         public ActionResult Parametros(int weekNo, string Departments)
         {
+            IList<SelfControlByDepartment> lists = new List<SelfControlByDepartment>();
+            List<string> listDepartments;
+            List<int> listShifts = new List<int>(new int[] { 0, 1, 2, 3 });
+
+            if (Departments != null)
+            {
+                listDepartments = Departments.Split(',').ToList();
+            }
+            else
+            {
+                listDepartments = db.Departments.Select(d => d.Name).ToList();
+            }
+
+            var rtData = db.RunningTimeData.Where(r => (r.WeekNo == weekNo)).ToList();
+            var qtmData = db.QTMData.Where(r => r.WeekNo == weekNo).ToList();
+            var visualData = db.VisualData.Where(r => r.WeekNo == weekNo).ToList();
+            var frecuency = (int)db.SelfControlSpecs.Where(s => s.Descripcion == "Frecuency").Select(s => s.Value).FirstOrDefault();
+            
+            foreach(var department in listDepartments)
+            {
+                var workCenters = db.WorkCenters.Where(w => w.DepartmentName == department).Select(w => w.Name).ToList();
+
+                foreach(var workCenter in workCenters)
+                {
+                    List<SelfControlByShift> shifts = new List<SelfControlByShift>();
+                    SelfControlByDepartment item = new SelfControlByDepartment();
+                    item.Item = workCenter;
+                    double? totalQTM = 0;
+                    double? totalVisual = 0;
+
+                    foreach (var _shift in listShifts)
+                    {
+                        SelfControlByShift shift = new SelfControlByShift();
+                        var listPacker = new SelfControlReportView();
+                        var listMaker = new SelfControlReportView();
+
+                        shift.Item = _shift;
+
+                        if (_shift == 0)
+                        {
+                            totalQTM = qtmData.Where(q => (q.IdWorkCenter == workCenter)).Select(q => q.Value).Sum();
+                            totalVisual = visualData.Where(q => (q.IdWorkCenter == workCenter)).Select(q => q.Value).Sum();
+
+                            listMaker = rtData
+                                .Where(x => (x.IdWorkCenter == workCenter) && (x.Type == "Maker"))
+                                .GroupBy(rd => rd.IdWorkCenter, rd => rd.RunningTime, (id, cant) => new SelfControlReportView
+                                {
+                                    ItemName = department,
+                                    Parameter = (int)totalQTM,
+                                    Sampling = (cant.Sum() / 60) == 0 ? 0 : (cant.Sum() / 60) / frecuency,
+                                    WorkingTime = (cant.Sum() / 60),
+                                    Fulfillment = ((cant.Sum() / 60) / frecuency) == 0 ? 0 : ((int)totalQTM * 100) / ((cant.Sum() / 60) / frecuency)
+                                }).FirstOrDefault();
+
+                            listPacker = rtData
+                                    .Where(x => (x.IdWorkCenter == workCenter) && (x.Type == "Packer"))
+                                    .GroupBy(rd => rd.IdWorkCenter, rd => rd.RunningTime, (id, cant) => new SelfControlReportView
+                                    {
+                                        ItemName = department,
+                                        Parameter = (int)totalVisual,
+                                        Sampling = (cant.Sum() / 60) == 0 ? 0 : (cant.Sum() / 60) / frecuency,
+                                        WorkingTime = cant.Sum() / 60,
+                                        Fulfillment = ((cant.Sum() / 60) / frecuency) == 0 ? 0 : ((int)totalVisual * 100) / ((cant.Sum() / 60) / frecuency)
+                                    }).FirstOrDefault();
+                        }
+                        else
+                        {
+                            totalQTM = qtmData.Where(q => (q.IdWorkCenter == workCenter) && (q.Shift == _shift)).Select(q => q.Value).Sum();
+                            totalVisual = visualData.Where(q => (q.IdWorkCenter == workCenter) && (q.Shift == _shift)).Select(q => q.Value).Sum();
+
+                            listMaker = rtData
+                                .Where(x => (x.IdWorkCenter == workCenter) && (x.Shift == _shift) && (x.Type == "Maker"))
+                                .GroupBy(rd => rd.IdWorkCenter, rd => rd.RunningTime, (id, cant) => new SelfControlReportView
+                                {
+                                    ItemName = department,
+                                    Parameter = (int)totalQTM,
+                                    Sampling = (cant.Sum() / 60) == 0 ? 0 : (cant.Sum() / 60) / frecuency,
+                                    WorkingTime = (cant.Sum() / 60),
+                                    Fulfillment = ((cant.Sum() / 60) / frecuency) == 0 ? 0 : ((int)totalQTM * 100) / ((cant.Sum() / 60) / frecuency)
+                                }).FirstOrDefault();
+
+                            listPacker = rtData
+                                    .Where(x => (x.IdWorkCenter == workCenter) && (x.Shift == _shift) && (x.Type == "Packer"))
+                                    .GroupBy(rd => rd.IdWorkCenter, rd => rd.RunningTime, (id, cant) => new SelfControlReportView
+                                    {
+                                        ItemName = department,
+                                        Parameter = (int)totalVisual,
+                                        Sampling = (cant.Sum() / 60) == 0 ? 0 : (cant.Sum() / 60) / frecuency,
+                                        WorkingTime = cant.Sum() / 60,
+                                        Fulfillment = ((cant.Sum() / 60) / frecuency) == 0 ? 0 : ((int)totalVisual * 100) / ((cant.Sum() / 60) / frecuency)
+                                    }).FirstOrDefault();
+                        }
+                        
+                        shift.Physical = new SelfControlReportView();
+                        shift.Physical = listMaker;
+                        shift.Visual = new SelfControlReportView();
+                        shift.Visual = listPacker;
+                        shifts.Add(shift);
+                    }
+
+                    item.Shift = new List<SelfControlByShift>();
+                    item.Shift = shifts;
+                    lists.Add(item);
+                }
+            }
+            
+            return Json(new { lists }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [RenderAjaxPartialScripts]
+        public ActionResult _Parametros(int weekNo, string Departments)
+        {
             IList<SelfControlReportList> lists = new List<SelfControlReportList>();
             List<string> listDepartments;
             List<int> listShifts = new List<int>(new int[] { 1, 2, 3 });
