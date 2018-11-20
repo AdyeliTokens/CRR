@@ -232,6 +232,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\MenuLinkHelper.cs" />
+    <Compile Include="Helpers\PrintLabel.cs" />
     <Compile Include="Helpers\RenderAjaxPartialScriptsResponseFilter.cs" />
     <Compile Include="Helpers\Shift.cs" />
     <Compile Include="Helpers\Week.cs" />
