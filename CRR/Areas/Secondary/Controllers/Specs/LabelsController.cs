@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CRR.DAL;
+using CRR.Helpers;
 using CRR.Models.Entidades.Specs;
+using PdfSharp.Pdf;
 
 namespace CRR.Areas.Secondary.Controllers.Specs
 {
@@ -38,18 +41,32 @@ namespace CRR.Areas.Secondary.Controllers.Specs
         }
 
         // GET: Secondary/Labels/Print/5
-        public ActionResult Print(int? id)
+        public void Print(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            //if (id == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
             Label label = db.Label.Find(id);
-            if (label == null)
-            {
-                return HttpNotFound();
-            }
-            return View(label);
+            //if (label == null)
+            //{
+            //    return HttpNotFound();
+            //}
+
+            PdfDocument document = new PdfDocument();
+            document = PrintLabel.CreateDocument(label);
+
+            MemoryStream stream = new MemoryStream();
+            document.Save(stream, false);
+            Response.Clear();
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("content-length", stream.Length.ToString());
+            Response.BinaryWrite(stream.ToArray());
+            Response.Flush();
+            stream.Close();
+            Response.End();
+
+            //return View(label);
         }
         
         // GET: Secondary/Labels/Create
